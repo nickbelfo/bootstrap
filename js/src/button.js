@@ -67,24 +67,26 @@ const Button = (($) => {
     toggle() {
       let triggerChangeEvent = true
       let addAriaPressed = true
-      const rootElement      = $(this._element).closest(
+      // we need to polyfill `closest`
+      // https://caniuse.com/#feat=element-closest
+      const rootElement = this._element.closest(
         Selector.DATA_TOGGLE
-      )[0]
+      )
 
       if (rootElement) {
-        const input = $(this._element).find(Selector.INPUT)[0]
+        const input = this._element.querySelector(Selector.INPUT)
 
         if (input) {
           if (input.type === 'radio') {
             if (input.checked &&
-              $(this._element).hasClass(ClassName.ACTIVE)) {
+              this._element.classList.contains(ClassName.ACTIVE)) {
               triggerChangeEvent = false
 
             } else {
-              const activeElement = $(rootElement).find(Selector.ACTIVE)[0]
+              const activeElement = rootElement.querySelector(Selector.ACTIVE)
 
               if (activeElement) {
-                $(activeElement).removeClass(ClassName.ACTIVE)
+                activeElement.classList.remove(ClassName.ACTIVE)
               }
             }
           }
@@ -96,7 +98,7 @@ const Button = (($) => {
               rootElement.classList.contains('disabled')) {
               return
             }
-            input.checked = !$(this._element).hasClass(ClassName.ACTIVE)
+            input.checked = !this._element.classList.contains(ClassName.ACTIVE)
             $(input).trigger('change')
           }
 
@@ -108,16 +110,16 @@ const Button = (($) => {
 
       if (addAriaPressed) {
         this._element.setAttribute('aria-pressed',
-          !$(this._element).hasClass(ClassName.ACTIVE))
+          !this._element.classList.contains(ClassName.ACTIVE))
       }
 
       if (triggerChangeEvent) {
-        $(this._element).toggleClass(ClassName.ACTIVE)
+        this._element.classList.toggle(ClassName.ACTIVE)
       }
     }
 
     dispose() {
-      $.removeData(this._element, DATA_KEY)
+      this._element.removeAttribute(DATA_KEY)
       this._element = null
     }
 
