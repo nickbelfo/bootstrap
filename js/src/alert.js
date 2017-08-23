@@ -11,7 +11,7 @@ import Util from './util'
  * --------------------------------------------------------------------------
  */
 
-const Alert = (($) => {
+const Alert = (() => {
 
 
   /**
@@ -170,17 +170,20 @@ const Alert = (($) => {
    * ------------------------------------------------------------------------
    * jQuery
    * ------------------------------------------------------------------------
+   * add .alert to jQuery only if jQuery is present
    */
 
-  $.fn[NAME]             = Alert._jQueryInterface
-  $.fn[NAME].Constructor = Alert
-  $.fn[NAME].noConflict  = function () {
-    $.fn[NAME] = JQUERY_NO_CONFLICT
-    return Alert._jQueryInterface
+  if (typeof $ !== 'undefined') {
+    $.fn[NAME]             = Alert._jQueryInterface
+    $.fn[NAME].Constructor = Alert
+    $.fn[NAME].noConflict  = function () {
+      $.fn[NAME] = JQUERY_NO_CONFLICT
+      return Alert._jQueryInterface
+    }
   }
 
   return Alert
 
-})(jQuery)
+})()
 
 export default Alert
